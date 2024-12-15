@@ -45,23 +45,23 @@ module "records" {
 
   records = [
     {
-      name    = "jenkins" #web-cdn.daws78s.online
+      name    = "jenkins" 
       type    = "A"
       ttl = 1
       records = [
         module.jenkins.public_ip
       ]
-      allow_overwrite = true
+      
       
     },
     {
-      name    = "jenkins-agent" #web-cdn.daws78s.online
+      name    = "jenkins-agent" 
       type    = "A"
       ttl = 1
       records = [
         module.jenkins.private_ip
       ]
-      allow_overwrite = true
+     
       
     }
   ]
