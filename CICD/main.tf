@@ -1,41 +1,37 @@
 module "jenkins" {
   source  = "terraform-aws-modules/ec2-instance/aws"
 
-  
-
   name = "jenkins-tf"
 
   instance_type          = "t3.small"
-  vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
-  subnet_id = "subnet-02c875ab2dec649fd"
+  vpc_security_group_ids = ["sg-0e9b9d879e1385874"] #replace your SG
+  subnet_id = "subnet-02c875ab2dec649fd" #replace your Subnet
+  ami = data.aws_ami.ami_info.id
   user_data = file("jenkins.sh")
-
   tags = {
-    Name   = "jenkins-tf"
-    
+    Name = "jenkins-tf"
   }
 }
 
 module "jenkins_agent" {
   source  = "terraform-aws-modules/ec2-instance/aws"
 
-  
-
   name = "jenkins-agent"
 
   instance_type          = "t3.small"
   vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
+  # convert StringList to list and get first element
   subnet_id = "subnet-02c875ab2dec649fd"
+  ami = data.aws_ami.ami_info.id
   user_data = file("jenkins-agent.sh")
-
   tags = {
-    Name   = "jenkins-agent"
-    
+    Name = "jenkins-agent"
   }
 }
 
 
-# create R53 records for RDS endpoint
+
+
 
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
@@ -45,24 +41,24 @@ module "records" {
 
   records = [
     {
-      name    = "jenkins" 
+      name    = "jenkins"
       type    = "A"
-      ttl = 1
+      ttl     = 1
       records = [
         module.jenkins.public_ip
       ]
       
-      
     },
     {
-      name    = "jenkins-agent" 
+      name    = "jenkins-agent"
       type    = "A"
-      ttl = 1
+      ttl     = 1
       records = [
-        module.jenkins.private_ip
+        module.jenkins_agent.private_ip
       ]
-     
       
     }
+    
   ]
+
 }
