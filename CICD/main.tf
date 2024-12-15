@@ -26,10 +26,10 @@ module "jenkins_agent" {
   instance_type          = "t3.small"
   vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
   subnet_id = "subnet-02c875ab2dec649fd"
-  user_data = file("jenkins.sh")
+  user_data = file("jenkins-agent.sh")
 
   tags = {
-    Name   = "jenkins-tf"
+    Name   = "jenkins-agent"
     
   }
 }
