@@ -22,7 +22,7 @@ module "jenkins_agent" {
   vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
   # convert StringList to list and get first element
   subnet_id = "subnet-02c875ab2dec649fd"
-  ami = "ami-0379a5ab62373b844"
+  ami = data.aws_ami.ami_info.id
   user_data = file("jenkins-agent.sh")
   tags = {
     Name = "jenkins-agent"
@@ -47,7 +47,7 @@ module "nexus" {
   vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
   # convert StringList to list and get first element
   subnet_id = "subnet-02c875ab2dec649fd"
-  ami = data.aws_ami.nexus_ami_info.id
+  ami = "ami-0379a5ab62373b844"
   key_name = aws_key_pair.id_ed25519.key_name
   root_block_device = [
     {
