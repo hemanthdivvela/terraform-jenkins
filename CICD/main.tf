@@ -29,8 +29,8 @@ module "jenkins_agent" {
   }
 }
 
-resource "aws_key_pair" "tools" {
-  key_name   = "tools"
+resource "aws_key_pair" "id_ed25519" {
+  key_name   = "id_ed25519"
   # you can paste the public key directly like this
   #public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL6ONJth+DzeXbU3oGATxjVmoRjPepdl7sBuPzzQT2Nc sivak@BOOK-I6CR3LQ85Q"
   public_key = file("~/.ssh/id_ed25519.pub")
@@ -48,7 +48,7 @@ module "nexus" {
   # convert StringList to list and get first element
   subnet_id = "subnet-02c875ab2dec649fd"
   ami = data.aws_ami.nexus_ami_info.id
-  key_name = aws_key_pair.tools.key_name
+  key_name = aws_key_pair.id_ed25519.key_name
   root_block_device = [
     {
       volume_type = "gp3"
