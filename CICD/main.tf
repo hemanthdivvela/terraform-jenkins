@@ -22,7 +22,7 @@ module "jenkins_agent" {
   vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
   # convert StringList to list and get first element
   subnet_id = "subnet-02c875ab2dec649fd"
-  ami = data.aws_ami.ami_info.id
+  ami = "ami-0379a5ab62373b844"
   user_data = file("jenkins-agent.sh")
   tags = {
     Name = "jenkins-agent"
