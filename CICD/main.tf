@@ -78,6 +78,7 @@ module "records" {
       records = [
         module.jenkins.public_ip
       ]
+      allow_overwrite = true
       
     },
     {
@@ -87,6 +88,7 @@ module "records" {
       records = [
         module.jenkins_agent.private_ip
       ]
+      allow_overwrite = true
       
     },
     {
@@ -97,6 +99,7 @@ module "records" {
       records = [
         module.nexus.private_ip
       ]
+      allow_overwrite = true
       
     }
     
