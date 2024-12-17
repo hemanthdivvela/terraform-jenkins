@@ -90,7 +90,7 @@ module "records" {
       ttl     = 1
       
       records = [
-        module.nexus.private_ip
+        module.nexus.public_ip
       ]
      
     }
