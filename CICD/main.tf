@@ -29,14 +29,13 @@ module "jenkins_agent" {
   }
 }
 
-resource "aws_key_pair" "id_ed25519" {
-  key_name   = "id_ed25519"
+resource "aws_key_pair" "openvpn" {
+  key_name   = "openvpn"
   # you can paste the public key directly like this
   #public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL6ONJth+DzeXbU3oGATxjVmoRjPepdl7sBuPzzQT2Nc sivak@BOOK-I6CR3LQ85Q"
-  public_key = file("~/.ssh/id_ed25519.pub")
+  public_key = file("~/.ssh/openvpn.pub")
   # ~ means windows home directory
 }
-
 
 module "nexus" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -47,8 +46,8 @@ module "nexus" {
   vpc_security_group_ids = ["sg-0e9b9d879e1385874"]
   # convert StringList to list and get first element
   subnet_id = "subnet-02c875ab2dec649fd"
-  ami = "ami-0379a5ab62373b844"
-  key_name = aws_key_pair.id_ed25519.key_name
+  ami = data.aws_ami.nexus_ami_info.id
+  key_name = aws_key_pair.openvpn.key_name
   root_block_device = [
     {
       volume_type = "gp3"
@@ -60,13 +59,9 @@ module "nexus" {
   }
 }
 
-
-
-
-
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
-  version = "~> 3.0"
+  version = "~> 2.0"
 
   zone_name = var.zone_name
 
@@ -79,7 +74,6 @@ module "records" {
         module.jenkins.public_ip
       ]
       allow_overwrite = true
-      
     },
     {
       name    = "jenkins-agent"
@@ -89,7 +83,6 @@ module "records" {
         module.jenkins_agent.private_ip
       ]
       allow_overwrite = true
-      
     },
     {
       name    = "nexus"
@@ -100,9 +93,7 @@ module "records" {
         module.nexus.private_ip
       ]
       allow_overwrite = true
-      
     }
-    
   ]
 
 }
